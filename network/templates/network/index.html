@@ -1,5 +1,16 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    <button id="add-new-post-button" class="btn btn-dark">+ Add New Post</button>
+    <form action="POST" id="add-new-post-form" class="grey-border p-3 my-3">
+        <div class="my-3">
+            <h1 class="text-center"><labelfor="new-post-content-textarea">New Post</labelfor=></h1>
+            <div class="mx-5">
+                <textarea class="form-control" name="new-post-content-textarea" id="new-post-content-textarea" cols="30" rows="4"></textarea>
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary btn-lg">Post</button>
+        </div>
+    </form>
 {% endblock %}

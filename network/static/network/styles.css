@@ -1,0 +1,12 @@
+.grey-border {
+  border: 1px solid #CCCCCC;
+  border-radius: 5px;
+}
+
+#add-new-post-form {
+  background: #e9ecef;
+}
+
+#new-post-content-textarea {
+  background: #ced4da;
+}/*# sourceMappingURL=styles.css.map */
