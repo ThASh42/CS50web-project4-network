@@ -4,11 +4,25 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post
 
 
 def index(request):
     return render(request, "network/index.html")
+
+
+def create_post(request):
+    if request.method == "POST":
+
+        content = request.POST["new-post-content-textarea"].strip()
+
+        post = Post(
+            content = content,
+            user = request.user,
+        )
+        post.save()
+
+        return HttpResponseRedirect(reverse("index"))
 
 
 def login_view(request):

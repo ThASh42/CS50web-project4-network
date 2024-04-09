@@ -2,7 +2,8 @@
 
 {% block body %}
     <button id="add-new-post-button" class="btn btn-dark">+ Add New Post</button>
-    <form action="POST" id="add-new-post-form" class="grey-border p-3 my-3">
+    <form method="POST" action="{% url "create_post" %}" id="add-new-post-form" class="grey-border p-3 my-3">
+        {% csrf_token %}
         <div class="my-3">
             <h1 class="text-center"><labelfor="new-post-content-textarea">New Post</labelfor=></h1>
             <div class="mx-5">
