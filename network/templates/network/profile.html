@@ -1,0 +1,33 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="row mb-4">
+        <div class="d-flex col-lg-auto">
+            <div>
+                <h1>{{profile_user}}</h1>
+            </div>
+            <div class="mx-3 d-flex align-items-center justify-content-left">
+                <button class="btn btn-primary">Follow</button>
+            </div>
+        </div>
+        <div class="col d-flex align-items-end justify-content-around">
+            <div class="d-flex justify-content-center">
+                <h4>followers: {{profile_user.followers}}</h4>
+            </div>
+            <div class="d-flex justify-content-center">
+                <h4>following: {{profile_user.following}}</h4>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div>
+        {% for post in posts %}
+            <div class="my-3">
+                <h4><strong>{{post.user.username}}</strong></h4>
+                <div>{{post.content}}</div>
+                <span class="text-black-50">{{post.datetime}}</span>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock body %}

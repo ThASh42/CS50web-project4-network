@@ -17,6 +17,21 @@ def index(request):
     })
 
 
+def profile(request, user):
+
+    # Get user from database
+    profile_user = User.objects.get(username = user)
+
+    # Get user's posts
+    posts = Post.objects.filter(user = profile_user).order_by("-datetime")
+
+    # Render profile page
+    return render(request, "network/profile.html", {
+        "profile_user": profile_user,
+        "posts": posts,
+    })
+
+
 def create_post(request):
     if request.method == "POST":
 

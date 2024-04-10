@@ -18,7 +18,9 @@
     <div>
         {% for post in posts %}
             <div class="my-3">
-                <h4><strong>{{post.user.username}}</strong></h4>
+                <a href="{% url "profile" post.user %}" class="text-reset text-decoration-none">
+                    <h4><strong>{{post.user.username}}</strong></h4>
+                </a>
                 <div>{{post.content}}</div>
                 <span class="text-black-50">{{post.datetime}}</span>
             </div>
