@@ -14,4 +14,15 @@
             <button class="btn btn-primary btn-lg">Post</button>
         </div>
     </form>
+    <hr>
+    <div>
+        {% for post in posts %}
+            <div class="my-3">
+                <h4><strong>{{post.user.username}}</strong></h4>
+                <div>{{post.content}}</div>
+                <span class="text-black-50">{{post.datetime}}</span>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
 {% endblock %}
