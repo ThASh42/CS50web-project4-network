@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from .models import User
+from django.contrib.messages import get_messages, constants
 
 # Create your tests here.
 class TestViews(TestCase):
@@ -20,4 +21,13 @@ class TestViews(TestCase):
     def test_create_post_POST_no_data(self):
         response = self.client.post(reverse('create_post'), {'new-post-content-textarea': ''})
 
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 302)
+
+        # Assert that there is an error message
+        message_found = False
+        messages = get_messages(response.wsgi_request)
+        for message in messages:
+            if message.message == "Post cannot be empty" and 'error' in message.tags:
+                message_found = True
+                break
+        self.assertTrue(message_found)

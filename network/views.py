@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -16,12 +17,18 @@ def create_post(request):
 
         content = request.POST["new-post-content-textarea"].strip()
 
+        if not content:
+            # Create error message
+            messages.error(request, "Post cannot be empty", extra_tags="danger")
+            return HttpResponseRedirect(reverse("index"))
+
         post = Post(
             content = content,
             user = request.user,
         )
         post.save()
 
+        messages.success(request, "Post was created successfully")
         return HttpResponseRedirect(reverse("index"))
 
 
