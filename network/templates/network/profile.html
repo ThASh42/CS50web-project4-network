@@ -1,4 +1,9 @@
 {% extends "network/layout.html" %}
+{% load static %}
+
+{% block script %} 
+    <script src="{% static "network/profile.js" %}"></script>
+{% endblock script %}
 
 {% block body %}
     <div class="row mb-4">
