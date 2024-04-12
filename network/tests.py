@@ -8,8 +8,9 @@ from django.contrib.messages import get_messages, constants
 class TestViews(TestCase):
 
     def setUp(self):
-        # Create a user
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        # Create users
+        self.main_user = User.objects.create_user(username='testuser', password='testpassword')
+        self.second_user = User.objects.create_user(username='testseconduser', password='testsecondpassword')
         # Make the user log in
         self.client.login(username='testuser', password='testpassword')
     
@@ -34,9 +35,8 @@ class TestViews(TestCase):
         self.assertTrue(message_found)
     
     def test_is_following_view_get(self):
-        self.second_user = User.objects.create_user(username='testseconduser', password='testsecondpassword')
 
-        # client follows second_user
+        # make GET request
         response = self.client.get(reverse('is_following', args=(self.second_user.username,)))
         self.assertEqual(response.status_code, 200)
 
@@ -50,16 +50,16 @@ class TestViews(TestCase):
         self.assertIsInstance(data['is_following'], bool)
 
     def test_is_following_view_post_and_delete(self):
-        self.second_user = User.objects.create_user(username='testseconduser', password='testsecondpassword')
 
         url = reverse('is_following', args=(self.second_user.username,))
         data = {
-            'follower': self.user.username,
+            'follower': self.main_user.username,
             'followed_user': self.second_user.username,
         }
-        # client follows second_user
+        # make POST request
         response = self.client.post(url, data, content_type='application/json')
         self.assertEqual(response.status_code, 204)
 
+        # make DELETE request
         response = self.client.delete(url, data, content_type='application/json')
         self.assertEqual(response.status_code, 204)
