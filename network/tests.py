@@ -48,3 +48,18 @@ class TestViews(TestCase):
 
         # Check if 'is_following' is boolean variable
         self.assertIsInstance(data['is_following'], bool)
+
+    def test_is_following_view_post_and_delete(self):
+        self.second_user = User.objects.create_user(username='testseconduser', password='testsecondpassword')
+
+        url = reverse('is_following', args=(self.second_user.username,))
+        data = {
+            'follower': self.user.username,
+            'followed_user': self.second_user.username,
+        }
+        # client follows second_user
+        response = self.client.post(url, data, content_type='application/json')
+        self.assertEqual(response.status_code, 204)
+
+        response = self.client.delete(url, data, content_type='application/json')
+        self.assertEqual(response.status_code, 204)
