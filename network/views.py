@@ -20,6 +20,20 @@ def index(request):
     })
 
 
+@login_required
+def following(request):
+    # Get current user
+    current_user = request.user
+    # Get all model objects of followed people by current user
+    all_following = Follow.objects.filter(follower = current_user)
+    # Receive all posts from your followers
+    posts = Post.objects.filter(user__in = all_following.values("followed_user")).order_by("-datetime")
+
+    return render(request, "network/following.html", {
+        "posts": posts,
+    })
+
+
 def profile(request, user):
 
     # Get user from database

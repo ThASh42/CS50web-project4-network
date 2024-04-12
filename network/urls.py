@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("following", views.following, name="following"),
     path("create-post", views.create_post, name="create_post"),
     path("pg/<str:user>", views.profile, name="profile"),
 
