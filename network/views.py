@@ -1,6 +1,7 @@
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -29,8 +30,13 @@ def following(request):
     # Receive all posts from your followers
     posts = Post.objects.filter(user__in = all_following.values("followed_user")).order_by("-datetime")
 
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "network/following.html", {
-        "posts": posts,
+        "page_obj": page_obj,
+        "range_pages": range(1, 1 + paginator.num_pages),
     })
 
 
