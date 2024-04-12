@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db import IntegrityError
@@ -68,12 +69,23 @@ def is_following(request, username):
         is_following = all_followings.filter(followed_user = followed_user.id).exists()
         
         return JsonResponse({"is_following": is_following})
-    
-    elif request.method == "POST":
-        return 0
-    elif request.method == "DELETE":
-        return 0
-
+    else:
+        data = json.loads(request.body)
+        follower = User.objects.get(username = data["follower"])
+        followed_user = User.objects.get(username = data["followed_user"])
+        
+        if request.method == "POST":
+            follow_model = Follow(
+                follower = follower,
+                followed_user = followed_user,
+            ).save()
+            return HttpResponse(status=204)
+        elif request.method == "DELETE":
+            follow_model = Follow.objects.filter(follower = follower, 
+            followed_user = followed_user).delete()
+            return HttpResponse(status=204)
+        else:
+            return JsonResponse({"error": "GET, POST or DELETE requests required."}, status=400)
 
 
 def login_view(request):
