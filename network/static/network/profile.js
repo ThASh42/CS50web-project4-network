@@ -16,8 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function followUnfollow(button, isFollowing, follower) {
     const usernameProfile = document.getElementById('profile_username').innerHTML;
     const method = isFollowing ? 'DELETE' : 'POST';
-    // Change button text to the opposite
-    button.innerHTML = isFollowing ? "Follow" : "Unfollow";
     
     fetch(`${usernameProfile}/is-following`, {
         method: method,
@@ -25,7 +23,11 @@ function followUnfollow(button, isFollowing, follower) {
             follower: follower,
             followed_user: usernameProfile,
         }),
-    });
+    }).then(() => {
+        // Change button functionality to the opposite
+        button.innerHTML = isFollowing ? "Follow" : "Unfollow";
+        button.onclick = () => followUnfollow(button, !isFollowing, follower);
+    })
 
-    button.onclick = () => followUnfollow(button, !isFollowing, follower);
+    
 };
