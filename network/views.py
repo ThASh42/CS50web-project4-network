@@ -28,10 +28,16 @@ def profile(request, user):
     # Get user's posts
     posts = Post.objects.filter(user = profile_user).order_by("-datetime")
 
+    # Get user's followers and following number
+    followers_count = Follow.objects.filter(followed_user = profile_user).count()
+    following_count = Follow.objects.filter(follower = profile_user).count()
+
     # Render profile page
     return render(request, "network/profile.html", {
         "profile_user": profile_user,
         "posts": posts,
+        "followers_count": followers_count,
+        "following_count": following_count,
     })
 
 

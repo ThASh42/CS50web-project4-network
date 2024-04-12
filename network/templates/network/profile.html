@@ -7,20 +7,22 @@
 
 {% block body %}
     <div class="row mb-4">
-        <div class="d-flex col-lg-auto">
+        <div class="d-flex col-lg-4">
             <div>
                 <h1 id="profile_username">{{profile_user}}</h1>
             </div>
-            <div class="mx-3 d-flex align-items-center justify-content-left">
-                <button id="profile-button-follow-unfollow" class="btn btn-primary">Follow</button>
-            </div>
+            {% if request.user != profile_user and user.is_authenticated %}
+                <div class="mx-3 d-flex align-items-center justify-content-left">
+                    <button id="profile-button-follow-unfollow" class="btn btn-primary">Follow</button>
+                </div>
+            {% endif %}
         </div>
-        <div class="col d-flex align-items-end justify-content-around">
-            <div class="d-flex justify-content-center">
-                <h4>followers: {{profile_user.followers}}</h4>
+        <div class="col-lg-8 row d-flex align-items-end justify-content-left">
+            <div class="col">
+                <h4>followers: {{followers_count}}</h4>
             </div>
-            <div class="d-flex justify-content-center">
-                <h4>following: {{profile_user.following}}</h4>
+            <div class="col">
+                <h4>following: {{following_count}}</h4>
             </div>
         </div>
     </div>
