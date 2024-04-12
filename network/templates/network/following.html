@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <div>
+    {% if posts.exists %}
         {% for post in posts %}
             <div class="my-3">
                 <a href="{% url "profile" post.user %}" class="text-reset text-decoration-none">
@@ -13,5 +13,10 @@
             </div>
             <hr>
         {% endfor %}
-    </div>
+    {% else %}
+        <div class="text-center">
+            <h3>Your following page is empty</h3>
+            <span class="text-black-50">Follow other users to see their posts here</span>
+        </div>
+    {% endif %}
 {% endblock %}
