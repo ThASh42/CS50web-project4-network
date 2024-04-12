@@ -1,11 +1,13 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Post
+from .models import User, Post, Follow
 
 
 def index(request):
@@ -50,6 +52,28 @@ def create_post(request):
 
         messages.success(request, "Post was created successfully")
         return HttpResponseRedirect(reverse("index"))
+
+
+@csrf_exempt
+@login_required
+def is_following(request, username):
+    if request.method == "GET":
+
+        # Get all user's followings
+        all_followings = Follow.objects.filter(follower = request.user.id)
+        # Get user that must be followed
+        followed_user = User.objects.get(username = username)
+        
+        # Check if the user already following
+        is_following = all_followings.filter(followed_user = followed_user.id).exists()
+        
+        return JsonResponse({"is_following": is_following})
+    
+    elif request.method == "POST":
+        return 0
+    elif request.method == "DELETE":
+        return 0
+
 
 
 def login_view(request):
