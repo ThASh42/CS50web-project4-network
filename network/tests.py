@@ -37,7 +37,7 @@ class TestViews(TestCase):
         self.second_user = User.objects.create_user(username='testseconduser', password='testsecondpassword')
 
         # client follows second_user
-        response = self.client.get(reverse('is_following', args=(self.second_user.username,)), {'new-post-content-textarea': ''})
+        response = self.client.get(reverse('is_following', args=(self.second_user.username,)))
         self.assertEqual(response.status_code, 200)
 
         # Parse the Json response
