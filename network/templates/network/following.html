@@ -3,16 +3,7 @@
 
 {% block body %}
     {% if page_obj %}
-        {% for post in page_obj %}
-            <div class="my-3">
-                <a href="{% url "profile" post.user %}" class="text-reset text-decoration-none">
-                    <h4><strong>{{post.user.username}}</strong></h4>
-                </a>
-                <div>{{post.content}}</div>
-                <span class="text-black-50">{{post.datetime}}</span>
-            </div>
-            <hr>
-        {% endfor %}
+        {% include "network/helpers/page_obj.html" %}
         {% include "network/helpers/pagination_posts.html" %}
     {% else %}
         <div class="text-center">
