@@ -2,7 +2,7 @@ import json
 from django.test import TestCase
 from django.urls import reverse
 from .models import User
-from django.contrib.messages import get_messages, constants
+from django.contrib.messages import get_messages
 
 # Create your tests here.
 class TestViews(TestCase):
