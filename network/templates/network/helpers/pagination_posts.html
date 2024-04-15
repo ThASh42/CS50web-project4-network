@@ -6,7 +6,7 @@
         {% else %} tabindex="-1" aria-disabled="true" {% endif %}>Previous</a>
     </li>
     {% for i in range_pages %}
-        {% if i|stringformat:'i' == request.GET.page %}
+        {% if i|stringformat:'i' == request.GET.page or not request.GET.page and i == 1%}
             <li class="page-item active">
                 <span class="page-link">{{ i }}</span>
                 <span class="sr-only">(current)</span>

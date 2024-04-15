@@ -22,7 +22,7 @@ def index(request):
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "network/index.html", {
+    return render(request, f"network/index.html", {
         "page_obj": page_obj,
         "range_pages": range(1, 1 + paginator.num_pages),
     })
