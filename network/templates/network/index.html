@@ -21,7 +21,7 @@
     </form>
     <hr>
     <div>
-        {% for post in posts %}
+        {% for post in page_obj %}
             <div class="my-3">
                 <a href="{% url "profile" post.user %}" class="text-reset text-decoration-none">
                     <h4><strong>{{post.user.username}}</strong></h4>
@@ -32,4 +32,5 @@
             <hr>
         {% endfor %}
     </div>
+    {% include "network/helpers/pagination_posts.html" %}
 {% endblock %}
