@@ -1,3 +1,4 @@
+{% if page_obj.paginator.num_pages != 1 %}
 <nav>
     <ul class="pagination justify-content-center">
     <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
@@ -5,7 +6,14 @@
         {% else %} tabindex="-1" aria-disabled="true" {% endif %}>Previous</a>
     </li>
     {% for i in range_pages %}
-        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% if i|stringformat:'i' == request.GET.page %}
+            <li class="page-item active">
+                <span class="page-link">{{ i }}</span>
+                <span class="sr-only">(current)</span>
+            </li>
+        {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
     {% endfor %}
     <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
         <a class="page-link" {% if page_obj.has_next %} href="?page={{ page_obj.next_page_number }}" 
@@ -13,3 +21,4 @@
     </li>
     </ul>
 </nav>
+{% endif %}
