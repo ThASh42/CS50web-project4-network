@@ -14,10 +14,17 @@ from .models import User, Post, Follow
 
 def index(request):
 
+    # Get all posts
     posts = Post.objects.all().order_by("-datetime")
 
+    # Use paginator
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "network/index.html", {
-        "posts": posts,
+        "page_obj": page_obj,
+        "range_pages": range(1, 1 + paginator.num_pages),
     })
 
 
