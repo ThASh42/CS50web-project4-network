@@ -16,12 +16,12 @@ class TestViews(TestCase):
     
     def test_create_post_POST(self):
         # Post a new post
-        response = self.client.post(reverse('create_post'), {'new-post-content-textarea': 'HI!'})
+        response = self.client.post(reverse('create_post'), {'add-new-post-form-textarea': 'HI!'})
         
         self.assertEqual(response.status_code, 302)
     
     def test_create_post_POST_no_data(self):
-        response = self.client.post(reverse('create_post'), {'new-post-content-textarea': ''})
+        response = self.client.post(reverse('create_post'), {'add-new-post-form-textarea': ''})
 
         self.assertEqual(response.status_code, 302)
 

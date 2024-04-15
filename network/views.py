@@ -71,7 +71,7 @@ def profile(request, user):
 def create_post(request):
     if request.method == "POST":
 
-        content = request.POST["new-post-content-textarea"].strip()
+        content = request.POST["add-new-post-form-textarea"].strip()
 
         if not content:
             # Create error message
