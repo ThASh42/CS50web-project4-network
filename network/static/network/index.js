@@ -36,7 +36,7 @@ function editPost(postId) {
         const editTextarea = document.createElement("textarea");
         const editTextareaDiv = document.createElement("div");
         const editPostDiv = document.querySelector(`div[data-postId="${postId}"]`);
-        const postContent = editPostDiv.querySelector("#post-content");
+        const postContent = editPostDiv.querySelector(".post-content");
 
         // Div of close and edit buttons
         const editButton = document.createElement("button");
