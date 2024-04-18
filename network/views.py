@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -118,7 +118,7 @@ def is_following(request, username):
             followed_user = followed_user).delete()
             return HttpResponse(status=204)
         else:
-            return JsonResponse({"error": "GET, POST or DELETE requests required."}, status=400)
+            return HttpResponseBadRequest("GET, POST or DELETE requests required")
 
 
 def login_view(request):
