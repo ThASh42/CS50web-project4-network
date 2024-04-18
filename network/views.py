@@ -90,6 +90,21 @@ def create_post(request):
 
 @csrf_exempt
 @login_required
+def edit_post(request, post_id):
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        post = Post.objects.get(pk=post_id)
+        
+        post.content = data["post_content"]
+        post.save()
+
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseBadRequest("Method must be PUT")
+
+
+@csrf_exempt
+@login_required
 def is_following(request, username):
     if request.method == "GET":
 

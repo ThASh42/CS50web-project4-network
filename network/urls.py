@@ -7,6 +7,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("following", views.following, name="following"),
     path("create-post", views.create_post, name="create_post"),
+    path("edit-post/<int:post_id>", views.edit_post, name="edit_post"),
     path("pg/<str:user>", views.profile, name="profile"),
 
     # API paths

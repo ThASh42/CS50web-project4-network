@@ -50,6 +50,7 @@ function editPost(postId) {
         // Textarea
         editTextarea.innerHTML = postContent.innerHTML;
         editTextarea.classList = ["form-control"];
+        editTextarea.id = "edit-post-textarea"
         
         // Append Childs to the main div
         editTextareaDiv.appendChild(editTextarea);
@@ -60,6 +61,24 @@ function editPost(postId) {
         editPostDiv.appendChild(editTextareaDiv);
 
         closeButton.onclick = () => {
+            document.getElementById("edit-post-div").remove();
+            editMode = false;
+        };
+
+        editButton.onclick = () => {
+            // Edit post textare with new content
+            documentEditTextarea = document.getElementById("edit-post-textarea");
+            // New content
+            new_content = documentEditTextarea.value;
+            fetch(`edit-post/${postId}`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    post_content: new_content,
+                }),
+            });
+            // Change post content
+            postContent.innerHTML = new_content;
+            // Delete edit post block
             document.getElementById("edit-post-div").remove();
             editMode = false;
         };
