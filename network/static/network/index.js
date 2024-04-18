@@ -55,7 +55,13 @@ function editPost(postId) {
         editTextareaDiv.appendChild(editTextarea);
         editTextareaDiv.appendChild(buttonsDiv);
         editTextareaDiv.classList = ["my-3"];
+        editTextareaDiv.id = "edit-post-div";
 
         editPostDiv.appendChild(editTextareaDiv);
+
+        closeButton.onclick = () => {
+            document.getElementById("edit-post-div").remove();
+            editMode = false;
+        };
     };
 };
