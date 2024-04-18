@@ -37,6 +37,7 @@ function editPost(postId) {
         const editTextareaDiv = document.createElement("div");
         const editPostDiv = document.querySelector(`div[data-postId="${postId}"]`);
         const postContent = editPostDiv.querySelector(".post-content");
+        const postDatetime = editPostDiv.querySelector(".post-datetime");
 
         // Div of close and edit buttons
         const editButton = document.createElement("button");
@@ -60,9 +61,15 @@ function editPost(postId) {
 
         editPostDiv.appendChild(editTextareaDiv);
 
+        // Hide post content and datetime
+        postContent.style.display = "none";
+        postDatetime.style.display = "none";
+
         closeButton.onclick = () => {
             document.getElementById("edit-post-div").remove();
             editMode = false;
+            postContent.style.display = "block";
+            postDatetime.style.display = "block";
         };
 
         editButton.onclick = () => {
@@ -81,6 +88,8 @@ function editPost(postId) {
             // Delete edit post block
             document.getElementById("edit-post-div").remove();
             editMode = false;
+            postContent.style.display = "block";
+            postDatetime.style.display = "block";
         };
     };
 };
