@@ -26,6 +26,17 @@ document.addEventListener("DOMContentLoaded", () => {
             newPostFormCreateButton.disabled = false;
         };
     });
+
+    document.querySelectorAll(".like-button").forEach(button => {
+        const postId = button.dataset.postid
+        fetch(`post-like/${postId}`)
+        .then(response => response.json())
+        .then(data => {
+            const isLiked = data.is_liked
+            if (isLiked) button.innerHTML = "Unlike";
+            button.onclick = () => likeUnlike(isLiked, postId, button);
+        });
+    });
 });
 
 // Edit post button functionality
@@ -92,4 +103,17 @@ function editPost(postId) {
             postDatetime.style.display = "block";
         };
     };
+};
+
+// Like or unlike post functionality
+function likeUnlike(isLiked, postId, button) {
+    method = isLiked ? "DELETE" : "POST";
+
+    fetch(`post-like/${postId}`, {
+        method: method,
+    })
+    .then(() => {
+        button.innerHTML = isLiked ? "Like" : "Unlike";
+        button.onclick = () => likeUnlike(!isLiked, postId, button);
+    });
 };

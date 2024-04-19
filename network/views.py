@@ -4,12 +4,12 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Post, Follow
+from .models import User, Post, Follow, PostLike
 
 
 def index(request):
@@ -134,6 +134,39 @@ def is_following(request, username):
             return HttpResponse(status=204)
         else:
             return HttpResponseBadRequest("GET, POST or DELETE requests required")
+
+
+@csrf_exempt
+@login_required
+def post_like(request, post_id):
+    
+    liked_post = get_object_or_404(Post, pk = post_id)
+    if request.method == "GET":
+        # Check user liked the post
+        is_liked = liked_post.likes.filter(pk=request.user.id).exists()
+        return JsonResponse({"is_liked": is_liked})
+
+    elif request.method == "POST":
+        current_user = request.user
+        # Add user to post's ManyToManyField
+        liked_post.likes.add(current_user)
+        # Create PostLike object
+        PostLike(
+            user = current_user,
+            post = liked_post,
+        ).save()
+
+        return HttpResponse(status=204)
+
+    elif request.method == "DELETE":
+        # Remove user from post's ManyToManyField
+        liked_post.likes.remove(request.user)
+        # Delete PostLike object
+        post_like = get_object_or_404(PostLike, user = request.user, post = liked_post)
+        post_like.delete()
+        return HttpResponse(status=204)
+    else:
+        return HttpResponseBadRequest("GET, POST or DELETE requests are required")
 
 
 def login_view(request):
