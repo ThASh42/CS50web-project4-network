@@ -3,6 +3,9 @@
 
 {% block script %} 
     <script src="{% static "network/index.js" %}"></script>
+    <script>
+        var like_post_data = JSON.parse('{{ like_post_json|escapejs }}');
+    </script>
 {% endblock script %}
 
 {% block body %}

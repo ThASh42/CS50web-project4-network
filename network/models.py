@@ -11,6 +11,15 @@ class Post(models.Model):
     content = models.TextField()
     datetime = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name="users_likes", blank=True)
+
+
+class PostLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    
+    class Meta: 
+        unique_together = ['user', 'post']
 
 
 class Follow(models.Model):
