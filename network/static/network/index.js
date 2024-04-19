@@ -29,13 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll(".like-button").forEach(button => {
         const postId = button.dataset.postid;
-        fetch(`post-like/${postId}`)
-        .then(response => response.json())
-        .then(data => {
-            const isLiked = data.is_liked;
-            if (isLiked) button.innerHTML = "Unlike";
-            button.onclick = () => likeUnlike(isLiked, postId, button);
-        });
+        const isLiked = like_post_data[postId];
+        if (isLiked) button.innerHTML = "Unlike";
+        button.onclick = () => likeUnlike(isLiked, postId, button);
     });
 });
 

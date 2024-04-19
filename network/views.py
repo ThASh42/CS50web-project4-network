@@ -22,9 +22,15 @@ def index(request):
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
 
+    like_post_dict = {}
+    current_user = request.user
+    for post in page_obj:
+        is_liked = PostLike.objects.filter(post = post, user = current_user).exists()
+        like_post_dict[post.id] = is_liked
     return render(request, f"network/index.html", {
         "page_obj": page_obj,
         "range_pages": range(1, 1 + paginator.num_pages),
+        "like_post_json": json.dumps(like_post_dict),
     })
 
 
