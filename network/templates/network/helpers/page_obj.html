@@ -17,17 +17,19 @@
                     </div>
                 {% endif %}
             </div>
-            <div class="post-content">{{post.content}}</div>
-            <span class="post-datetime text-black-50">{{post.datetime}}</span>
-            <div class="d-flex">
-                <div>
-                    {{ post.likes.count }}
-                </div>  
-                {% if request.user != post.user %}
-                    <div class="ml-2">
-                        <button class="like-button btn btn-primary py-0 px-2" data-postid="{{ post.id }}">Like</button>
-                    </div>
-                {% endif %}
+            <div class="post-elements">
+                <div class="post-content">{{post.content}}</div>
+                <span class="post-datetime text-black-50">{{post.datetime}}</span>
+                <div class="d-flex">
+                    <div>
+                        {{ post.likes.count }}
+                    </div>  
+                    {% if request.user != post.user %}
+                        <div class="ml-2">
+                            <button class="like-button btn btn-primary py-0 px-2" data-postid="{{ post.id }}">Like</button>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
         <hr>
