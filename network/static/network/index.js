@@ -71,7 +71,6 @@ function editPost(postId) {
         // Hide post content and datetime
         postElements.style.display = "none";
 
-
         closeButton.onclick = () => {
             document.getElementById("edit-post-div").remove();
             editMode = false;
@@ -107,7 +106,16 @@ function likeUnlike(isLiked, postId, button) {
         method: method,
     })
     .then(() => {
+        const editPostDiv = document.querySelector(`div[data-postId="${postId}"]`);
+        const likeCount = editPostDiv.querySelector(".post-like-count");
+        
+        // Update the like count displayed on the post
+        likeCount.innerHTML = isLiked ? parseInt(likeCount.innerHTML) - 1 : parseInt(likeCount.innerHTML) + 1;
+        
+        // Change button text
         button.innerHTML = isLiked ? "Like" : "Unlike";
+        
+        // Update the button onclick event to toggle like/unlike functionality
         button.onclick = () => likeUnlike(!isLiked, postId, button);
     });
 };
