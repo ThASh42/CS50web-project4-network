@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
