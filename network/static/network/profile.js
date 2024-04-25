@@ -1,23 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     const followButton = document.getElementById('profile-button-follow-unfollow');
-    const usernameProfile = document.getElementById('profile_username').innerHTML;
+    const currentUserUsername = document.getElementById('user-username').innerHTML;
 
-    fetch(`${usernameProfile}/is-following`)
-    .then(response => response.json())
-    .then(result => {
-        const currentUserUsername = document.getElementById('user-username').innerHTML;
-        
-        followButton.innerHTML = result.is_following ? 'Unfollow' : 'Follow';
-        followButton.onclick = () => followUnfollow(followButton, result.is_following, currentUserUsername);
-    });
+    // isFollowing is defined in the HTML template (profile.html)
+    followButton.innerHTML = isFollowing ? 'Unfollow' : 'Follow';
+    followButton.onclick = () => followUnfollow(followButton, isFollowing, currentUserUsername);
 });
 
 function followUnfollow(button, isFollowing, follower) {
     const usernameProfile = document.getElementById('profile_username').innerHTML;
     const method = isFollowing ? 'DELETE' : 'POST';
     
-    fetch(`${usernameProfile}/is-following`, {
+    fetch(`${usernameProfile}/follow-unfollow`, {
         method: method,
         body: JSON.stringify({
             follower: follower,

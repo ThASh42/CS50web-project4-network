@@ -11,7 +11,7 @@ urlpatterns = [
     path("pg/<str:user>", views.profile, name="profile"),
 
     # API paths
-    path("pg/<str:username>/is-following", views.is_following, name="is_following"),
+    path("pg/<str:username>/follow-unfollow", views.follow_unfollow, name="follow_unfollow"),
     path("post-like/<int:post_id>", views.post_like, name="post_like"),
 
     path("login", views.login_view, name="login"),

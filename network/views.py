@@ -65,12 +65,21 @@ def profile(request, user):
     followers_count = Follow.objects.filter(followed_user = profile_user).count()
     following_count = Follow.objects.filter(follower = profile_user).count()
 
+    # * Check following of user
+    # Get all user's followings
+    all_followings = Follow.objects.filter(follower = request.user.id)
+    # Get user that must be followed
+    followed_user = User.objects.get(username = user)
+    # Check if the user already following
+    is_following = all_followings.filter(followed_user = followed_user.id).exists()
+
     # Render profile page
     return render(request, "network/profile.html", {
         "profile_user": profile_user,
         "posts": posts,
         "followers_count": followers_count,
         "following_count": following_count,
+        "is_following": is_following,
     })
 
 
@@ -111,35 +120,26 @@ def edit_post(request, post_id):
 
 @csrf_exempt
 @login_required
-def is_following(request, username):
-    if request.method == "GET":
-
-        # Get all user's followings
-        all_followings = Follow.objects.filter(follower = request.user.id)
-        # Get user that must be followed
-        followed_user = User.objects.get(username = username)
+def follow_unfollow(request, username):
+    data = json.loads(request.body)
+    follower = User.objects.get(username = data["follower"])
+    followed_user = User.objects.get(username = data["followed_user"])
+    
+    if request.method == "POST":
+        follow_model = Follow(
+            follower = follower,
+            followed_user = followed_user,
+        ).save()
         
-        # Check if the user already following
-        is_following = all_followings.filter(followed_user = followed_user.id).exists()
+        return HttpResponse(status=204)
+    
+    elif request.method == "DELETE":
+        follow_model = Follow.objects.filter(follower = follower, 
+        followed_user = followed_user).delete()
         
-        return JsonResponse({"is_following": is_following})
+        return HttpResponse(status=204)
     else:
-        data = json.loads(request.body)
-        follower = User.objects.get(username = data["follower"])
-        followed_user = User.objects.get(username = data["followed_user"])
-        
-        if request.method == "POST":
-            follow_model = Follow(
-                follower = follower,
-                followed_user = followed_user,
-            ).save()
-            return HttpResponse(status=204)
-        elif request.method == "DELETE":
-            follow_model = Follow.objects.filter(follower = follower, 
-            followed_user = followed_user).delete()
-            return HttpResponse(status=204)
-        else:
-            return HttpResponseBadRequest("GET, POST or DELETE requests required")
+        return HttpResponseBadRequest("GET, POST or DELETE requests required")
 
 
 @csrf_exempt

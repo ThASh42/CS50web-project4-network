@@ -33,25 +33,9 @@ class TestViews(TestCase):
                 message_found = True
                 break
         self.assertTrue(message_found)
-    
-    def test_is_following_view_get(self):
-
-        # make GET request
-        response = self.client.get(reverse('is_following', args=(self.second_user.username,)))
-        self.assertEqual(response.status_code, 200)
-
-        # Parse the Json response
-        data = json.loads(response.content)
-
-        # Check if the JSON contains 'is_following' key
-        self.assertIn('is_following', data)
-
-        # Check if 'is_following' is boolean variable
-        self.assertIsInstance(data['is_following'], bool)
 
     def test_is_following_view_post_and_delete(self):
-
-        url = reverse('is_following', args=(self.second_user.username,))
+        url = reverse('follow_unfollow', args=(self.second_user.username,))
         data = {
             'follower': self.main_user.username,
             'followed_user': self.second_user.username,
