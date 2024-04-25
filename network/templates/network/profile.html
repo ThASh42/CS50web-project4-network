@@ -3,7 +3,7 @@
 
 {% block script %} 
     <script>
-        const isFollowing = "{{ is_following }}";
+        let isFollowing = "{{ is_following }}".toLowerCase() === "false" ? false : true;
     </script>
     <script src="{% static "network/profile.js" %}"></script>
 {% endblock script %}
