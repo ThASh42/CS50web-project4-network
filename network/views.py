@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -115,7 +115,7 @@ def edit_post(request, post_id):
 
         return HttpResponse(status=204)
     else:
-        return HttpResponseBadRequest("Method must be PUT")
+        return HttpResponse("Method must be PUT", status=405)
 
 
 @csrf_exempt
@@ -130,16 +130,15 @@ def follow_unfollow(request, username):
             follower = follower,
             followed_user = followed_user,
         ).save()
-        
-        return HttpResponse(status=204)
-    
+        return HttpResponse(status=201)
+
     elif request.method == "DELETE":
         follow_model = Follow.objects.filter(follower = follower, 
         followed_user = followed_user).delete()
-        
         return HttpResponse(status=204)
+
     else:
-        return HttpResponseBadRequest("GET, POST or DELETE requests required")
+        return HttpResponse("Method must be POST or DELETE", status=405)
 
 
 @csrf_exempt
@@ -161,8 +160,7 @@ def post_like(request, post_id):
             user = current_user,
             post = liked_post,
         ).save()
-
-        return HttpResponse(status=204)
+        return HttpResponse(status=201)
 
     elif request.method == "DELETE":
         # Remove user from post's ManyToManyField
@@ -172,7 +170,7 @@ def post_like(request, post_id):
         post_like.delete()
         return HttpResponse(status=204)
     else:
-        return HttpResponseBadRequest("GET, POST or DELETE requests are required")
+        return HttpResponse("Method must be GET, POST or DELETE", status=405)
 
 
 def login_view(request):
