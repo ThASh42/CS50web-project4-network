@@ -93,17 +93,20 @@ function editPost(postId) {
 
         editButton.onclick = () => {
             // Edit post textare with new content
-            documentEditTextarea = document.getElementById("edit-post-textarea");
+            const documentEditTextarea = document.getElementById("edit-post-textarea");
             // New content
-            new_content = documentEditTextarea.value;
-            fetch(`edit-post/${postId}`, {
-                method: "PUT",
-                body: JSON.stringify({
-                    post_content: new_content,
-                }),
-            });
-            // Change post content
-            postContent.innerHTML = new_content;
+            const new_content = documentEditTextarea.value;
+
+            if (postContent.innerHTML !== new_content) {
+                fetch(`edit-post/${postId}`, {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        post_content: new_content,
+                    }),
+                });
+                // Change post content
+                postContent.innerHTML = new_content;
+            }
             // Delete edit post block
             document.getElementById("edit-post-div").remove();
             editMode = false;
