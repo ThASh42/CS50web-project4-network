@@ -20,13 +20,15 @@
             <div class="post-elements">
                 <div class="post-content">{{post.content}}</div>
                 <span class="post-datetime text-black-50">{{post.datetime}}</span>
-                <div class="d-flex">
-                    <div class="post-like-count">
-                        {{ post.likes.count }}
-                    </div>  
-                    <div class="ml-2">
-                        <button class="like-button btn btn-primary py-0 px-2" data-postid="{{ post.id }}">Like</button>
-                    </div>
+                <span class="span-like d-flex text-black-50">
+                    <div>Liked by</div>
+                    <div class="mx-1 post-like-count">{{ post.likes.count }}</div>
+                    <div class="users-text">users</div>
+                </span>
+                <div class="mt-1">
+                    <button class="like-button btn btn-outline-danger btn-sm" data-postid="{{ post.id }}">
+                        Like
+                    </button>
                 </div>
             </div>
         </div>

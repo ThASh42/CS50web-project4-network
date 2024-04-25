@@ -33,6 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (isLiked) button.innerHTML = "Unlike";
         button.onclick = () => likeUnlike(isLiked, postId, button);
     });
+
+    // Unpluralize user text if the counter is 1
+    document.querySelectorAll(".span-like").forEach(span => {
+        if (span.querySelector(".post-like-count").textContent == 1) 
+        span.querySelector(".users-text").textContent = "user";
+    });
 });
 
 // Edit post button functionality
@@ -106,12 +112,17 @@ function likeUnlike(isLiked, postId, button) {
         method: method,
     })
     .then(() => {
-        const editPostDiv = document.querySelector(`div[data-postId="${postId}"]`);
-        const likeCount = editPostDiv.querySelector(".post-like-count");
+        const postDiv = document.querySelector(`div[data-postId="${postId}"]`);
+        const likeCount = postDiv.querySelector(".post-like-count");
+        const usersText = postDiv.querySelector(".users-text");
         
         // Update the like count displayed on the post
         likeCount.innerHTML = isLiked ? parseInt(likeCount.innerHTML) - 1 : parseInt(likeCount.innerHTML) + 1;
         
+        // Pluralize user text if like counter ends with 1
+        const likeCountLength = likeCount.textContent.length;
+        usersText.textContent = likeCount.textContent.charAt(likeCountLength - 1) == 1 ? "user" : "users";
+
         // Change button text
         button.innerHTML = isLiked ? "Like" : "Unlike";
         
