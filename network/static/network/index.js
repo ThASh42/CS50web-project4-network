@@ -52,61 +52,57 @@ document.addEventListener("DOMContentLoaded", () => {
 // Edit post button functionality
 function editPost(postId) {
     if (editMode === false){
+        // Enter edit mode
         editMode = true;
+        const postEditDiv = document.createElement("div");
+        const postDiv = document.querySelector(`div[data-postId="${postId}"]`);
+        const postElements = postDiv.querySelector(".post-elements");
+        const postContent = postElements.querySelector(".post-content");
 
-        const editTextarea = document.createElement("textarea");
-        const editTextareaDiv = document.createElement("div");
-        const editPostDiv = document.querySelector(`div[data-postId="${postId}"]`);
-        const postContent = editPostDiv.querySelector(".post-content");
-        const postElements = editPostDiv.querySelector('.post-elements');
+        postEditDiv.id = "edit-post-div"; 
+        postEditDiv.className = "my-3";
 
-        // Div of close and edit buttons
-        const editButton = document.createElement("button");
-        const closeButton = document.createElement("button");
-        const buttonsDiv = document.createElement("div");
-        editButton.classList = ["btn btn-primary mx-1"]; editButton.innerHTML = "Edit";
-        closeButton.classList = ["btn btn-dark mx-1"]; closeButton.innerHTML = "Close";
-        buttonsDiv.appendChild(editButton); buttonsDiv.appendChild(closeButton);
-        buttonsDiv.classList = ["d-flex justify-content-center my-2"]
-        
-        // Textarea
-        editTextarea.innerHTML = postContent.innerHTML;
-        editTextarea.classList = ["form-control"];
-        editTextarea.id = "edit-post-textarea"
-        
-        // Append Childs to the main div
-        editTextareaDiv.appendChild(editTextarea);
-        editTextareaDiv.appendChild(buttonsDiv);
-        editTextareaDiv.classList = ["my-3"];
-        editTextareaDiv.id = "edit-post-div";
-
-        editPostDiv.appendChild(editTextareaDiv);
+        // Fill and display postEditDiv
+        postEditDiv.innerHTML = `
+            <textarea class="form-control" id="edit-post-textarea">${ postContent.textContent }</textarea>
+            <div class="d-flex justify-content-center my-2">
+                <button id="edit-button" class="btn btn-primary mx-1">Edit</button>
+                <button id="close-button" class="close-button btn btn-dark mx-1">Close</button>
+            </div>
+        `;
+        postDiv.appendChild(postEditDiv);
 
         // Hide post content and datetime
         postElements.style.display = "none";
 
+        // Edit and close buttons
+        const editButton = postDiv.querySelector("#edit-button");
+        const closeButton = postDiv.querySelector("#close-button");
+
+        // Close button function (delete edit post block)
         closeButton.onclick = () => {
             document.getElementById("edit-post-div").remove();
             editMode = false;
             postElements.style.display = "block";
         };
 
+        // Edit button function
         editButton.onclick = () => {
-            // Edit post textare with new content
-            const documentEditTextarea = document.getElementById("edit-post-textarea");
+            // Edit post textarea with new content
+            const documentEditTextarea = postDiv.querySelector("#edit-post-textarea");
             // New content
             const new_content = documentEditTextarea.value;
-
-            if (postContent.innerHTML !== new_content) {
+            // Make a request to change edit's content
+            if (postContent.textContent !== new_content) {
                 fetch(`edit-post/${postId}`, {
                     method: "PUT",
                     body: JSON.stringify({
                         post_content: new_content,
                     }),
                 });
-                // Change post content
-                postContent.innerHTML = new_content;
-            }
+                // Change post content on page
+                postContent.textContent = new_content;
+            };
             // Delete edit post block
             document.getElementById("edit-post-div").remove();
             editMode = false;
