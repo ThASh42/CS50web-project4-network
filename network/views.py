@@ -24,11 +24,13 @@ def index(request):
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
 
+    # Create boolean dictionary of liked post if autorized
     like_post_dict = {}
-    current_user = request.user
+    is_authenticated = request.user.is_authenticated
     for post in page_obj:
-        is_liked = PostLike.objects.filter(post = post, user = current_user).exists()
+        is_liked = PostLike.objects.filter(post=post, user=request.user).exists() if is_authenticated else False
         like_post_dict[post.id] = is_liked
+    
     return render(request, f"network/index.html", {
         "page_obj": page_obj,
         "range_pages": range(1, 1 + paginator.num_pages),
