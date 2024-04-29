@@ -1,6 +1,13 @@
 {% extends "network/layout.html" %}
 {% load static %}
 
+{% block script %} 
+    <script src="{% static "network/index.js" %}"></script>
+    <script>
+        var like_post_data = JSON.parse('{{ like_post_json|escapejs }}');
+    </script>
+{% endblock script %}
+
 {% block body %}
     {% if page_obj %}
         {% include "network/helpers/page_obj.html" %}

@@ -50,9 +50,16 @@ def following(request):
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
 
+    # Create boolean dictionary of liked post
+    like_post_dict = {}
+    for post in page_obj:
+        is_liked = PostLike.objects.filter(post = post, user = current_user).exists()
+        like_post_dict[post.id] = is_liked
+
     return render(request, "network/following.html", {
         "page_obj": page_obj,
         "range_pages": range(1, 1 + paginator.num_pages),
+        "like_post_json": json.dumps(like_post_dict),
     })
 
 
