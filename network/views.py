@@ -8,10 +8,12 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods, require_GET, require_POST
 
 from .models import User, Post, Follow, PostLike
 
 
+@require_GET
 def index(request):
 
     # Get all posts
@@ -22,11 +24,13 @@ def index(request):
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
 
+    # Create boolean dictionary of liked post if autorized
     like_post_dict = {}
-    current_user = request.user
+    is_authenticated = request.user.is_authenticated
     for post in page_obj:
-        is_liked = PostLike.objects.filter(post = post, user = current_user).exists()
+        is_liked = PostLike.objects.filter(post=post, user=request.user).exists() if is_authenticated else False
         like_post_dict[post.id] = is_liked
+    
     return render(request, f"network/index.html", {
         "page_obj": page_obj,
         "range_pages": range(1, 1 + paginator.num_pages),
@@ -34,6 +38,7 @@ def index(request):
     })
 
 
+@require_GET
 @login_required
 def following(request):
     # Get current user
@@ -47,12 +52,20 @@ def following(request):
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
 
+    # Create boolean dictionary of liked post
+    like_post_dict = {}
+    for post in page_obj:
+        is_liked = PostLike.objects.filter(post = post, user = current_user).exists()
+        like_post_dict[post.id] = is_liked
+
     return render(request, "network/following.html", {
         "page_obj": page_obj,
         "range_pages": range(1, 1 + paginator.num_pages),
+        "like_post_json": json.dumps(like_post_dict),
     })
 
 
+@require_GET
 def profile(request, user):
 
     # Get user from database
@@ -83,43 +96,41 @@ def profile(request, user):
     })
 
 
+@require_POST
 def create_post(request):
-    if request.method == "POST":
+    content = request.POST["add-new-post-form-textarea"].strip()
 
-        content = request.POST["add-new-post-form-textarea"].strip()
-
-        if not content:
-            # Create error message
-            messages.error(request, "Post cannot be empty", extra_tags="danger")
-            return HttpResponseRedirect(reverse("index"))
-
-        post = Post(
-            content = content,
-            user = request.user,
-        )
-        post.save()
-
-        messages.success(request, "Post was created successfully")
+    if not content:
+        # Create error message
+        messages.error(request, "Post cannot be empty", extra_tags="danger")
         return HttpResponseRedirect(reverse("index"))
 
+    post = Post(
+        content = content,
+        user = request.user,
+    )
+    post.save()
+
+    messages.success(request, "Post was created successfully")
+    return HttpResponseRedirect(reverse("index"))
+
 
 @csrf_exempt
 @login_required
+@require_http_methods("PUT")
 def edit_post(request, post_id):
-    if request.method == "PUT":
-        data = json.loads(request.body)
-        post = Post.objects.get(pk=post_id)
-        
-        post.content = data["post_content"]
-        post.save()
+    data = json.loads(request.body)
+    post = Post.objects.get(pk=post_id)
+    
+    post.content = data["post_content"]
+    post.save()
 
-        return HttpResponse(status=204)
-    else:
-        return HttpResponse("Method must be PUT", status=405)
+    return HttpResponse(status=204)
 
 
 @csrf_exempt
 @login_required
+@require_http_methods(["POST", "DELETE"])
 def follow_unfollow(request, username):
     data = json.loads(request.body)
     follower = User.objects.get(username = data["follower"])
@@ -137,12 +148,10 @@ def follow_unfollow(request, username):
         followed_user = followed_user).delete()
         return HttpResponse(status=204)
 
-    else:
-        return HttpResponse("Method must be POST or DELETE", status=405)
-
 
 @csrf_exempt
 @login_required
+@require_http_methods(["GET", "POST", "DELETE"])
 def post_like(request, post_id):
     
     liked_post = get_object_or_404(Post, pk = post_id)
@@ -169,8 +178,6 @@ def post_like(request, post_id):
         post_like = get_object_or_404(PostLike, user = request.user, post = liked_post)
         post_like.delete()
         return HttpResponse(status=204)
-    else:
-        return HttpResponse("Method must be GET, POST or DELETE", status=405)
 
 
 def login_view(request):
