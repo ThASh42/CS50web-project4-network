@@ -93,22 +93,27 @@ function likeUnlike(isLiked, postId, button) {
     fetch(`post-like/${postId}`, {
         method: method,
     })
-    .then(() => {
-        const postDiv = document.querySelector(`div[data-postId="${postId}"]`);
-        const likeCount = postDiv.querySelector(".post-like-count");
-        const usersText = postDiv.querySelector(".users-text");
-        
-        // Update the like count displayed on the post
-        likeCount.innerHTML = isLiked ? parseInt(likeCount.innerHTML) - 1 : parseInt(likeCount.innerHTML) + 1;
-        
-        // Pluralize user text if like counter ends with 1
-        const likeCountLength = likeCount.textContent.length;
-        usersText.textContent = likeCount.textContent.charAt(likeCountLength - 1) == 1 ? "user" : "users";
+    .then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;
+        }
+        else {
+            const postDiv = document.querySelector(`div[data-postId="${postId}"]`);
+            const likeCount = postDiv.querySelector(".post-like-count");
+            const usersText = postDiv.querySelector(".users-text");
+            
+            // Update the like count displayed on the post
+            likeCount.innerHTML = isLiked ? parseInt(likeCount.innerHTML) - 1 : parseInt(likeCount.innerHTML) + 1;
+            
+            // Pluralize user text if like counter ends with 1
+            const likeCountLength = likeCount.textContent.length;
+            usersText.textContent = likeCount.textContent.charAt(likeCountLength - 1) == 1 ? "user" : "users";
 
-        // Change button text
-        button.innerHTML = isLiked ? likeIcon : unlikeIcon;
-        
-        // Update the button onclick event to toggle like/unlike functionality
-        button.onclick = () => likeUnlike(!isLiked, postId, button);
+            // Change button text
+            button.innerHTML = isLiked ? likeIcon : unlikeIcon;
+            
+            // Update the button onclick event to toggle like/unlike functionality
+            button.onclick = () => likeUnlike(!isLiked, postId, button);
+        }
     });
 };
