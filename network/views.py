@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import IntegrityError
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -96,6 +96,8 @@ def profile(request, user):
     })
 
 
+@csrf_exempt
+@login_required
 @require_POST
 def create_post(request):
     content = request.POST["add-new-post-form-textarea"].strip()
@@ -135,16 +137,16 @@ def follow_unfollow(request, username):
     data = json.loads(request.body)
     follower = User.objects.get(username = data["follower"])
     followed_user = User.objects.get(username = data["followed_user"])
-    
+
     if request.method == "POST":
-        follow_model = Follow(
+        Follow(
             follower = follower,
             followed_user = followed_user,
         ).save()
         return HttpResponse(status=201)
 
     elif request.method == "DELETE":
-        follow_model = Follow.objects.filter(follower = follower, 
+        Follow.objects.filter(follower = follower, 
         followed_user = followed_user).delete()
         return HttpResponse(status=204)
 

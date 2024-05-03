@@ -21,7 +21,5 @@ function followUnfollow(button, isFollowing, follower) {
         // Change button functionality to the opposite
         button.innerHTML = isFollowing ? "Follow" : "Unfollow";
         button.onclick = () => followUnfollow(button, !isFollowing, follower);
-    })
-
-    
+    });
 };
