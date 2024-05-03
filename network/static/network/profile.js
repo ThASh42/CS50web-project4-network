@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const followButton = document.getElementById('profile-button-follow-unfollow');
-    const currentUserUsername = document.getElementById('user-username').innerHTML;
+    const userElement = document.getElementById('user-username');
 
-    // isFollowing is defined in the HTML template (profile.html)
-    followButton.innerHTML = isFollowing ? 'Unfollow' : 'Follow';
-    followButton.onclick = () => followUnfollow(followButton, isFollowing, currentUserUsername);
+    if (userElement) {
+        const currentUserUsername = userElement.textContent;
+        // isFollowing is defined in the HTML template (profile.html)
+        followButton.textContent = isFollowing ? 'Unfollow' : 'Follow';
+        followButton.onclick = () => followUnfollow(followButton, isFollowing, currentUserUsername);
+    };
 });
 
 function followUnfollow(button, isFollowing, follower) {

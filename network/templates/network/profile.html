@@ -14,9 +14,18 @@
             <div>
                 <h1 id="profile_username">{{profile_user}}</h1>
             </div>
-            {% if request.user != profile_user and user.is_authenticated %}
+            {% if request.user != profile_user %}
                 <div class="mx-3 d-flex align-items-center justify-content-left">
+                    {% if not user.is_authenticated %} 
+                        <form action="{% url 'follow_unfollow' profile_user %}" 
+                        class=" d-flex align-items-center justify-content-left"> 
+                    {% endif %}
+                    
                     <button id="profile-button-follow-unfollow" class="btn btn-primary">Follow</button>
+                    
+                    {% if not user.is_authenticated %}
+                        </form>
+                    {% endif %}
                 </div>
             {% endif %}
         </div>
