@@ -136,7 +136,7 @@ def edit_post(request, post_id):
 def follow_unfollow(request, username):
     data = json.loads(request.body)
     follower = User.objects.get(username = data["follower"])
-    followed_user = User.objects.get(username = data["followed_user"])
+    followed_user = User.objects.get(username = username)
 
     if request.method == "POST":
         Follow(

@@ -15,7 +15,6 @@ function followUnfollow(button, isFollowing, follower) {
         method: method,
         body: JSON.stringify({
             follower: follower,
-            followed_user: usernameProfile,
         }),
     }).then(() => {
         // Change button functionality to the opposite
